@@ -50,6 +50,24 @@ def install_sigwinch_handler(scanner):
     signal.signal(signal.SIGWINCH, _handler)
 
 
+_COLORS_INITIALIZED = False
+
+
+def _init_colors():
+    global _COLORS_INITIALIZED
+    if _COLORS_INITIALIZED or not _HAS_CURSES:
+        return
+    try:
+        curses.start_color()
+        curses.use_default_colors()
+        curses.init_pair(1, curses.COLOR_YELLOW, -1)   # randomized MAC
+        curses.init_pair(2, curses.COLOR_CYAN, -1)     # correlated device
+        curses.init_pair(3, curses.COLOR_RED, -1)      # proximity alert
+        _COLORS_INITIALIZED = True
+    except Exception:
+        pass
+
+
 def redraw_tui(scanner, screen):
     """Redraw the live TUI device table.
 
@@ -60,6 +78,8 @@ def redraw_tui(scanner, screen):
     if not _HAS_CURSES:
         return
     try:
+        _init_colors()
+
         if getattr(scanner, "_tui_resize_pending", False):
             screen.clear()
             scanner._tui_resize_pending = False
@@ -132,7 +152,9 @@ def redraw_tui(scanner, screen):
                                 f" ... {remaining} more (resize terminal)", w - 1)
                 break
 
-            addr = (dev.get("address") or "")[:17]
+            is_rand = bool(dev.get("is_randomized"))
+            raw_addr = (dev.get("address") or "")
+            addr = ("~" + raw_addr[:16] if is_rand else raw_addr[:17])
             dtype_short = (dev.get("device_type") or "?")[:4]
             rssi_val = dev.get("rssi")
             rssi_str = str(rssi_val) if rssi_val is not None else ""
@@ -170,18 +192,19 @@ def redraw_tui(scanner, screen):
                 )
 
             attr = curses.A_NORMAL
-            if dev.get("is_randomized"):
-                attr = curses.A_DIM
-            if dev.get("device_type") == "AP":
-                attr = curses.A_NORMAL
+            if is_rand:
+                attr = (curses.color_pair(1) if _COLORS_INITIALIZED
+                        else curses.A_BOLD)
             if (scanner.correlate and dev.get("ie_fingerprint")
                     and len(scanner.correlator.correlated_macs(
                         dev.get("ie_fingerprint", ""))) > 1):
-                attr |= curses.A_BOLD   # correlated device
+                attr = (curses.color_pair(2) | curses.A_BOLD
+                        if _COLORS_INITIALIZED else curses.A_BOLD)
             if (scanner.alert_within is not None
                     and isinstance(dist_val, (int, float))
                     and dist_val <= scanner.alert_within):
-                attr |= curses.A_STANDOUT
+                attr = (curses.color_pair(3) | curses.A_BOLD
+                        if _COLORS_INITIALIZED else curses.A_STANDOUT)
 
             screen.addnstr(row, 0, line, w - 1, attr)
             row += 1
