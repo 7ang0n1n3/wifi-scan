@@ -13,7 +13,7 @@ from .utils import _is_randomized_mac, _normalize_mac, _timestamp
 from .gps import GpsdReader
 from .output import SqliteRecorder
 
-__version__ = "1.0.0"
+__version__ = "1.5.0"
 __all__ = [
     "WiFiScanner",
     "FingerprintCorrelator",
