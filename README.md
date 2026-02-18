@@ -163,6 +163,12 @@ sudo python3 wifi-scan.py --all -i wlan0 --channel 6
 
 # Disable hopping (dwell on first channel of selected band)
 sudo python3 wifi-scan.py --all -i wlan0 --2ghz --no-hop
+
+# Faster hopping — spend less time per channel (default: 0.1s, min: 0.05s)
+sudo python3 wifi-scan.py --all -i wlan0 --hop-interval 0.05
+
+# Slower hopping — more dwell time per channel to catch more frames
+sudo python3 wifi-scan.py --all -i wlan0 --2ghz --hop-interval 0.5
 ```
 
 ### Frame capture
