@@ -15,8 +15,7 @@ def _is_randomized_mac(mac: str) -> bool:
 
     Modern operating systems (Android 10+, iOS 14+, Windows 10 21H1+) set
     the locally administered bit (bit 1 of the first octet) when randomizing
-    WiFi MAC addresses to prevent tracking.  This is the WiFi analog of a
-    Bluetooth Resolvable Private Address (RPA).
+    WiFi MAC addresses to prevent tracking.
     """
     if not mac:
         return False

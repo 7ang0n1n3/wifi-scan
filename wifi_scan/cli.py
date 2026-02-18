@@ -30,9 +30,8 @@ def _build_parser() -> argparse.ArgumentParser:
         description=(
             "WiFi scanner with monitor-mode packet capture, MAC randomization\n"
             "detection, IE fingerprint correlation, and SQLite/CSV/JSON output.\n\n"
-            "The WiFi analog of btrpa-scan's BLE + RPA resolution capabilities:\n"
             "  --correlate  tracks devices across MAC rotations via IE fingerprinting\n"
-            "               (equivalent to BLE IRK resolution for randomized MACs)"
+            "               (groups devices sharing the same probe request IE sequence)"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )

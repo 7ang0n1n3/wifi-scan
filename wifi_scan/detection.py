@@ -1,9 +1,4 @@
-"""802.11 frame parsing, IE extraction, encryption detection, and fingerprinting.
-
-This module is the wifi-scan analog of btrpa-scan's detection.py, which parsed
-BLE advertisement data.  Here we parse 802.11 management frames captured by
-scapy in monitor mode.
-"""
+"""802.11 frame parsing, IE extraction, encryption detection, and fingerprinting."""
 
 import hashlib
 import struct
@@ -286,7 +281,7 @@ def parse_vht_caps(data: bytes) -> Optional[str]:
 
 
 # ---------------------------------------------------------------------------
-# IE fingerprinting — WiFi analog of BLE advertisement fingerprinting
+# IE fingerprinting
 # ---------------------------------------------------------------------------
 
 def compute_ie_fingerprint(ies: List[Tuple[int, bytes]]) -> str:
@@ -296,8 +291,7 @@ def compute_ie_fingerprint(ies: List[Tuple[int, bytes]]) -> str:
     However, the precise sequence and values of Information Elements (IEs) in
     probe requests are determined by the device's driver and OS and remain
     stable across MAC rotations.  This fingerprint allows correlating detections
-    that come from the same physical device even after it changes its MAC — the
-    WiFi equivalent of Bluetooth IRK resolution for RPAs.
+    that come from the same physical device even after it changes its MAC.
 
     We include: supported/extended rates, HT/VHT capability bits, extended
     capabilities, and vendor-specific IE OUIs.  We exclude SSIDs (vary per

@@ -1,12 +1,4 @@
-"""WiFiScanner — core 802.11 monitor-mode scanner for wifi-scan.
-
-Architecture mirrors btrpa-scan's BLEScanner:
-- Scapy AsyncSniffer replaces bleak BleakScanner
-- Beacon frames (from APs) replace BLE advertisements
-- Probe requests (from stations) replace BLE scan requests
-- MAC randomization detection replaces RPA detection
-- IE fingerprint correlation replaces IRK resolution
-"""
+"""WiFiScanner — core 802.11 monitor-mode scanner for wifi-scan."""
 
 import asyncio
 import csv
@@ -286,11 +278,11 @@ class WiFiScanner:
         self.frame_fingerprints: Dict[str, str] = {}    # mac → frame fingerprint
         self.device_best_gps: Dict[str, dict] = {}      # mac → {lat, lon, rssi}
 
-        # RSSI sliding window (same as btrpa-scan)
+        # RSSI sliding window
         self.rssi_window = max(1, rssi_window)
         self.rssi_history: Dict[str, deque] = {}
 
-        # IE fingerprint correlator (WiFi analog of IRK resolution)
+        # IE fingerprint correlator
         self.correlator = FingerprintCorrelator()
         self.correlation_count = 0   # number of new correlations found
 
@@ -506,7 +498,7 @@ class WiFiScanner:
             elif tag_id == 191:
                 vht_caps = parse_vht_caps(data)
 
-        # IE fingerprint (WiFi analog of BLE RPA)
+        # IE fingerprint
         ie_fp = compute_ie_fingerprint(ies)
         fp = compute_frame_fingerprint(pkt)
         adv_changed = (src_mac in self.frame_fingerprints

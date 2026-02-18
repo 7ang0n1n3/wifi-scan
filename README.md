@@ -2,24 +2,13 @@
 
 A 802.11 WiFi scanner with monitor-mode packet capture, MAC randomization detection, IE fingerprint correlation, and SQLite/CSV/JSON output.
 
-Directly inspired by [btrpa-scan](../btrpa-scan/) — the BLE scanner with RPA resolution — and mirrors its architecture for WiFi:
-
-| BLE (btrpa-scan) | WiFi (wifi-scan) |
-|---|---|
-| BLE advertisement | 802.11 management frame (Beacon / Probe Request) |
-| Resolvable Private Address (RPA) | Randomized MAC (locally administered bit) |
-| IRK (Identity Resolving Key) | IE fingerprint (stable probe request sequence) |
-| `--irk` resolution | `--correlate` correlation |
-| bleak `BleakScanner` | scapy `AsyncSniffer` |
-| iBeacon / Eddystone parsing | IE parsing (HT/VHT caps, RSN, vendor IEs) |
-
 ## Features
 
 - **Monitor-mode sniffing** via scapy — captures Beacon, Probe Request, Probe Response, and Association frames
 - **AP discovery** — BSSID, SSID, channel, encryption (Open/WEP/WPA/WPA2/WPA3), vendor, HT/VHT capabilities
 - **Station discovery** — detects client devices probing for networks, tracks probe SSID history
 - **MAC randomization detection** — flags devices using locally administered (randomized) MACs
-- **IE fingerprint correlation** (`--correlate`) — groups detections sharing the same probe request IE fingerprint, tracking the same physical device across MAC rotations (the WiFi analog of BLE IRK resolution)
+- **IE fingerprint correlation** (`--correlate`) — groups detections sharing the same probe request IE fingerprint, tracking the same physical device across MAC rotations
 - **Channel hopping** — automatically cycles through 2.4 GHz + 5 GHz channels
 - **OUI vendor lookup** — identifies device manufacturer from MAC prefix
 - **RSSI averaging** — sliding-window averaging for stable distance estimates
@@ -151,7 +140,7 @@ sudo python3 wifi-scan.py AA:BB:CC:DD:EE:FF -i wlan0
 # Search for a specific SSID (partial match, case-insensitive)
 sudo python3 wifi-scan.py --ssid "MyNetwork" -i wlan0
 
-# Correlate devices across MAC randomization (WiFi analog of IRK resolution)
+# Correlate devices across MAC randomization
 sudo python3 wifi-scan.py --correlate -i wlan0
 ```
 
@@ -281,7 +270,7 @@ FP CORRELATED  —  addr #3  [FP match: DE:AD:BE:EF:00:01]
   IE Fingerprint: a1b2c3d4e5f60708
 ```
 
-This is the direct WiFi analog of btrpa-scan's BLE IRK resolution.
+Devices sharing an IE fingerprint are flagged as likely the same hardware, even across different randomized MACs.
 
 ## Running tests
 

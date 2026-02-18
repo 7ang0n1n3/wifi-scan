@@ -1,19 +1,13 @@
 """MAC randomization detection and IE fingerprint correlation for wifi-scan.
 
-In Bluetooth, devices using Resolvable Private Addresses (RPAs) can be tracked
-by resolving the address cryptographically with an Identity Resolving Key (IRK).
-btrpa-scan implements that flow in crypto.py.
+Modern devices set the locally administered (L/A) bit in their WiFi MAC address
+to signal that the address is ephemeral and will rotate periodically.
 
-WiFi's equivalent mechanism is MAC address randomization: modern devices set
-the locally administered (L/A) bit in their WiFi MAC address to signal that
-the address is ephemeral and will rotate periodically.
-
-Rather than cryptographic resolution, wifi-scan uses Information Element (IE)
-fingerprinting: the precise sequence and values of IEs in probe requests is
-remarkably stable per device model / OS combination, even as MAC addresses
-rotate.  The FingerprintCorrelator groups detections that share an IE
-fingerprint — likely representing the same physical device under different
-randomized MACs.
+wifi-scan uses Information Element (IE) fingerprinting to correlate devices
+across MAC rotations: the precise sequence and values of IEs in probe requests
+is remarkably stable per device model / OS combination.  The
+FingerprintCorrelator groups detections that share an IE fingerprint — likely
+representing the same physical device under different randomized MACs.
 """
 
 from typing import Dict, List, Optional, Set, Tuple
@@ -53,10 +47,9 @@ def estimate_distance(rssi: int, ref_rssi: int = -37,
 class FingerprintCorrelator:
     """Correlate devices across MAC address rotations using IE fingerprints.
 
-    This is the WiFi analog of IRK resolution in btrpa-scan: instead of
-    cryptographic RPA resolution, we group detections by their stable IE
-    fingerprint.  When a new MAC is observed with an already-known fingerprint,
-    it is flagged as a correlated device (likely the same hardware).
+    When a new MAC is observed with an already-known fingerprint, it is flagged
+    as a correlated device (likely the same hardware under a different
+    randomized MAC).
     """
 
     def __init__(self):
