@@ -43,8 +43,8 @@ Directly inspired by [btrpa-scan](../btrpa-scan/) — the BLE scanner with RPA r
 ```bash
 git clone https://github.com/7ang0n1n3/wifi-scan.git
 cd wifi-scan
-pip install scapy            # core dependency
-pip install flask flask-socketio  # optional: web GUI
+pip install scapy                     # core dependency
+pip install flask flask-socketio      # optional: web GUI
 sudo python3 wifi-scan.py --all -i wlan0
 ```
 
@@ -56,9 +56,6 @@ pip install -e .
 pip install -e ".[gui]"
 sudo wifi-scan --all -i wlan0
 ```
-
-> Throughout this README, `wifi-scan` refers to the installed command.
-> If running directly, replace it with `python3 wifi-scan.py`.
 
 ## Monitor mode
 
@@ -92,8 +89,6 @@ or
 
 ```
 sudo python3 wifi-scan.py [bssid] [options]
-# or if installed:
-sudo wifi-scan [bssid] [options]
 ```
 
 ### Live TUI
@@ -102,20 +97,20 @@ The TUI shows a real-time scrolling device table with RSSI sparklines, sorted
 by signal strength.  Bold rows are correlated devices (shared IE fingerprint).
 
 ```bash
-sudo wifi-scan --all -i wlan0 --tui
+sudo python3 wifi-scan.py --all -i wlan0 --tui
 ```
 
 Useful TUI combinations:
 
 ```bash
 # 2.4 GHz only with 5-sample RSSI averaging
-sudo wifi-scan --all -i wlan0 --tui --2ghz --rssi-window 5
+sudo python3 wifi-scan.py --all -i wlan0 --tui --2ghz --rssi-window 5
 
 # Track stations probing for networks, group by IE fingerprint
-sudo wifi-scan --correlate -i wlan0 --tui --frame-types probe
+sudo python3 wifi-scan.py --correlate -i wlan0 --tui --frame-types probe
 
 # Log everything to SQLite while watching the TUI
-sudo wifi-scan --all -i wlan0 --tui --db scan.db
+sudo python3 wifi-scan.py --all -i wlan0 --tui --db scan.db
 ```
 
 ### Web GUI
@@ -124,7 +119,7 @@ The web GUI opens a browser tab with a live radar canvas, device sidebar, and
 detail panel.  Devices update in real time via WebSocket.
 
 ```bash
-sudo wifi-scan --all -i wlan0 --gui
+sudo python3 wifi-scan.py --all -i wlan0 --gui
 ```
 
 > **Note:** When running as root, Chrome/Chromium may block the auto-open
@@ -135,94 +130,94 @@ Useful GUI combinations:
 
 ```bash
 # Custom port
-sudo wifi-scan --all -i wlan0 --gui --gui-port 8080
+sudo python3 wifi-scan.py --all -i wlan0 --gui --gui-port 8080
 
 # Save to SQLite while the GUI runs
-sudo wifi-scan --all -i wlan0 --gui --db scan.db
+sudo python3 wifi-scan.py --all -i wlan0 --gui --db scan.db
 
 # 5 GHz only with signal averaging
-sudo wifi-scan --all -i wlan0 --gui --5ghz --rssi-window 3
+sudo python3 wifi-scan.py --all -i wlan0 --gui --5ghz --rssi-window 3
 ```
 
 ### Scan modes
 
 ```bash
 # Discover all APs and stations (default)
-sudo wifi-scan --all -i wlan0
+sudo python3 wifi-scan.py --all -i wlan0
 
 # Target a specific BSSID
-sudo wifi-scan AA:BB:CC:DD:EE:FF -i wlan0
+sudo python3 wifi-scan.py AA:BB:CC:DD:EE:FF -i wlan0
 
 # Search for a specific SSID (partial match, case-insensitive)
-sudo wifi-scan --ssid "MyNetwork" -i wlan0
+sudo python3 wifi-scan.py --ssid "MyNetwork" -i wlan0
 
 # Correlate devices across MAC randomization (WiFi analog of IRK resolution)
-sudo wifi-scan --correlate -i wlan0
+sudo python3 wifi-scan.py --correlate -i wlan0
 ```
 
 ### Channel selection
 
 ```bash
 # All channels, hopping (default)
-sudo wifi-scan --all -i wlan0
+sudo python3 wifi-scan.py --all -i wlan0
 
 # 2.4 GHz only (channels 1–13)
-sudo wifi-scan --all -i wlan0 --2ghz
+sudo python3 wifi-scan.py --all -i wlan0 --2ghz
 
 # 5 GHz only
-sudo wifi-scan --all -i wlan0 --5ghz
+sudo python3 wifi-scan.py --all -i wlan0 --5ghz
 
 # Stay on channel 6
-sudo wifi-scan --all -i wlan0 --channel 6
+sudo python3 wifi-scan.py --all -i wlan0 --channel 6
 
 # Disable hopping (dwell on first channel of selected band)
-sudo wifi-scan --all -i wlan0 --2ghz --no-hop
+sudo python3 wifi-scan.py --all -i wlan0 --2ghz --no-hop
 ```
 
 ### Frame capture
 
 ```bash
 # Beacons only — discover APs
-sudo wifi-scan --all -i wlan0 --frame-types beacon
+sudo python3 wifi-scan.py --all -i wlan0 --frame-types beacon
 
 # Probe requests only — discover client devices
-sudo wifi-scan --all -i wlan0 --frame-types probe
+sudo python3 wifi-scan.py --all -i wlan0 --frame-types probe
 ```
 
 ### Signal filtering
 
 ```bash
 # Ignore devices below -75 dBm
-sudo wifi-scan --all -i wlan0 --min-rssi -75
+sudo python3 wifi-scan.py --all -i wlan0 --min-rssi -75
 
 # RSSI averaging over 5 samples
-sudo wifi-scan --all -i wlan0 --rssi-window 5
+sudo python3 wifi-scan.py --all -i wlan0 --rssi-window 5
 
 # Proximity alert within 5 m
-sudo wifi-scan --all -i wlan0 --alert-within 5
+sudo python3 wifi-scan.py --all -i wlan0 --alert-within 5
 ```
 
 ### Output
 
 ```bash
 # Real-time CSV log
-sudo wifi-scan --all -i wlan0 --log scan.csv
+sudo python3 wifi-scan.py --all -i wlan0 --log scan.csv
 
 # SQLite database
-sudo wifi-scan --all -i wlan0 --db wifi.db
+sudo python3 wifi-scan.py --all -i wlan0 --db wifi.db
 
 # Batch JSON at end of scan
-sudo wifi-scan --all -i wlan0 -t 30 --output json -o results.json
+sudo python3 wifi-scan.py --all -i wlan0 -t 30 --output json -o results.json
 ```
 
 ### GPS
 
 ```bash
 # GPS stamping via gpsd (enabled automatically if gpsd is running)
-sudo wifi-scan --all -i wlan0
+sudo python3 wifi-scan.py --all -i wlan0
 
 # Disable GPS
-sudo wifi-scan --all -i wlan0 --no-gps
+sudo python3 wifi-scan.py --all -i wlan0 --no-gps
 ```
 
 ## Configuration file
