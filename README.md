@@ -38,11 +38,27 @@ Directly inspired by [btrpa-scan](../btrpa-scan/) — the BLE scanner with RPA r
 
 ## Installation
 
+**Option A — run directly (no install):**
+
+```bash
+git clone https://github.com/7ang0n1n3/wifi-scan.git
+cd wifi-scan
+pip install scapy            # core dependency
+pip install flask flask-socketio  # optional: web GUI
+sudo python3 wifi-scan.py --all -i wlan0
+```
+
+**Option B — install as a command:**
+
 ```bash
 pip install -e .
 # or with web GUI support:
 pip install -e ".[gui]"
+sudo wifi-scan --all -i wlan0
 ```
+
+> Throughout this README, `wifi-scan` refers to the installed command.
+> If running directly, replace it with `python3 wifi-scan.py`.
 
 ## Monitor mode
 
@@ -50,7 +66,7 @@ wifi-scan configures monitor mode automatically — no manual setup needed.
 Pass your wireless interface with `-i` and the app handles the rest:
 
 ```bash
-sudo wifi-scan --all -i wlan0
+sudo python3 wifi-scan.py --all -i wlan0
 ```
 
 On startup it tries two strategies in order:
@@ -75,6 +91,8 @@ or
 ## Usage
 
 ```
+sudo python3 wifi-scan.py [bssid] [options]
+# or if installed:
 sudo wifi-scan [bssid] [options]
 ```
 
