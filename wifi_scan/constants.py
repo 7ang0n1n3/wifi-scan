@@ -19,7 +19,7 @@ _TIMED_SCAN_POLL_INTERVAL = 0.1
 _GPS_STARTUP_DELAY = 0.5
 _GPS_RECONNECT_DELAY = 5.0
 _GPS_SOCKET_TIMEOUT = 5.0
-_CHANNEL_HOP_INTERVAL = 0.25  # seconds per channel
+_CHANNEL_HOP_INTERVAL = 0.1   # seconds per channel (minimum ~0.05 due to iw latency)
 
 # 2.4 GHz channels (1–13 worldwide; 14 Japan only)
 _CHANNELS_2GHZ: List[int] = list(range(1, 14))

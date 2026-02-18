@@ -86,6 +86,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "--no-hop", action="store_true",
         help="Disable channel hopping (stay on the first selected channel)",
     )
+    ch_grp.add_argument(
+        "--hop-interval", type=float, default=None, metavar="SEC",
+        help="Seconds to dwell on each channel before hopping (default: 0.1, min: 0.05)",
+    )
 
     # Frame types
     frame = p.add_argument_group("Capture")
@@ -252,6 +256,7 @@ def main():
         name_filter=args.name_filter,
         channels=channels,
         no_hop=no_hop,
+        hop_interval=args.hop_interval,
         no_gps=args.no_gps,
         tui=args.tui,
         gui=args.gui,

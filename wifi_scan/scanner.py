@@ -249,6 +249,7 @@ class WiFiScanner:
         name_filter: Optional[str] = None,
         channels: Optional[List[int]] = None,
         no_hop: bool = False,
+        hop_interval: Optional[float] = None,
         no_gps: bool = False,
         tui: bool = False,
         gui: bool = False,
@@ -318,6 +319,7 @@ class WiFiScanner:
         else:
             self.channels = _CHANNELS_ALL
         self.no_hop = no_hop
+        self.hop_interval = max(0.05, hop_interval) if hop_interval is not None else _CHANNEL_HOP_INTERVAL
         self._current_channel: Optional[int] = None
         self._hopper: Optional[_ChannelHopper] = None
 
@@ -680,7 +682,8 @@ class WiFiScanner:
 
         # Start channel hopper
         if not self.no_hop and len(self.channels) > 1:
-            self._hopper = _ChannelHopper(self.interface, self.channels)
+            self._hopper = _ChannelHopper(self.interface, self.channels,
+                                           interval=self.hop_interval)
             self._hopper.start()
         else:
             if self.channels:
