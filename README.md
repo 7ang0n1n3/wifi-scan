@@ -2,6 +2,8 @@
 
 A 802.11 WiFi scanner with monitor-mode packet capture, MAC randomization detection, IE fingerprint correlation, and SQLite/CSV/JSON output.
 
+Inspired by [btrpa-scan](https://github.com/HackingDave/btrpa-scan) by HackingDave, mirroring its architecture for WiFi.
+
 ## Features
 
 - **Monitor-mode sniffing** via scapy — captures Beacon, Probe Request, Probe Response, and Association frames
